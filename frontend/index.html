@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — TaskFlow</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <script src="/js/theme-init.js"></script>
+</head>
+<body>
+
+<button type="button" class="btn btn-icon auth-theme-fab" data-theme-toggle aria-label="Toggle theme">
+  <span class="nav-icon"></span>
+</button>
+<div class="bg-glow"></div>
+<div class="auth-page">
+  <aside class="auth-brand">
+    <div class="auth-brand-inner">
+      <div class="logo-row">
+        <div class="logo-mark" id="brand-logo"></div>
+        <div class="logo-text">Task<span>Flow</span></div>
+      </div>
+      <h2>Coordinate work across your entire team.</h2>
+      <p>Projects, assignments, and progress tracking in one workspace — built for teams that need clarity, not clutter.</p>
+      <div class="auth-brand-features">
+        <div class="auth-feature"><span class="auth-feature-dot"></span><div><strong>Role-based access</strong> Admin and member permissions per project</div></div>
+        <div class="auth-feature"><span class="auth-feature-dot"></span><div><strong>Live task boards</strong> Kanban workflow with status and deadlines</div></div>
+        <div class="auth-feature"><span class="auth-feature-dot"></span><div><strong>Team dashboard</strong> Overview of workload, completion, and overdue items</div></div>
+      </div>
+    </div>
+    <p class="auth-brand-footer">Enterprise-grade task management</p>
+  </aside>
+  <div class="auth-panel">
+    <div class="auth-card">
+      <div class="auth-card-mobile-logo">
+        <div class="logo-mark" id="mobile-logo"></div>
+        <div class="logo-text">Task<span>Flow</span></div>
+      </div>
+      <h1>Sign in</h1>
+      <p class="subtitle">Choose your role, then enter your credentials.</p>
+      <div class="auth-role-tabs" role="tablist" aria-label="Sign in as">
+        <button type="button" class="auth-role-tab active" data-role="ADMIN" role="tab" aria-selected="true">
+          Project Lead
+          <span class="auth-role-tab-sub">Admin · full CRUD</span>
+        </button>
+        <button type="button" class="auth-role-tab" data-role="MEMBER" role="tab" aria-selected="false">
+          Tasker
+          <span class="auth-role-tab-sub">Member · read &amp; update</span>
+        </button>
+      </div>
+      <p class="auth-role-hint" id="role-hint">Create projects, manage teams, and full task CRUD.</p>
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="name@company.com" required autocomplete="email"/>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter your password" required autocomplete="current-password"/>
+        </div>
+        <p id="login-error" class="form-error"></p>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:4px">Sign in</button>
+      </form>
+      <div class="auth-footer">No account? <a href="/signup">Create one</a></div>
+    </div>
+  </div>
+</div>
+<script src="/js/icons.js"></script>
+<script>document.getElementById('brand-logo').innerHTML=Icons.logo;document.getElementById('mobile-logo').innerHTML=Icons.logo;</script>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project — TaskFlow</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <script src="/js/theme-init.js"></script>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark" id="sidebar-logo"></div>
+      <div class="logo-text">Task<span>Flow</span></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar" id="user-avatar">?</div>
+      <div class="user-info">
+        <div class="name" id="user-name">Loading</div>
+        <div class="email" id="user-email"></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Menu</div>
+      <a href="/dashboard" class="nav-item">
+        <span class="nav-icon" id="nav-icon-dashboard"></span> Work Hub
+      </a>
+      <a href="#" class="nav-item active">
+        <span class="nav-icon" id="nav-icon-project"></span> Project
+      </a>
+      <div class="nav-section-title" style="margin-top:8px">Session</div>
+      <div class="nav-item" id="logout-btn">
+        <span class="nav-icon" id="nav-icon-logout"></span> Sign out
+      </div>
+    </nav>
+
+    <div class="sidebar-tools">
+      <div class="nav-section-title">Preferences</div>
+      <button type="button" class="nav-item" id="refresh-btn" title="Reload page data">
+        <span class="nav-icon" id="nav-icon-refresh"></span> Refresh
+      </button>
+      <button type="button" class="nav-item" data-theme-toggle>
+        <span class="nav-icon"></span> <span class="theme-label">Theme</span>
+      </button>
+    </div>
+    <div class="sidebar-bottom">TaskFlow v1.0</div>
+  </aside>
+  <main class="main-content">
+    <div class="project-page-header">
+      <div>
+        <h1 id="project-name">Loading</h1>
+        <p id="project-desc"></p>
+        <p class="text-sm" style="margin-top:8px">Your role: <span id="my-project-role"></span></p>
+      </div>
+      <div class="project-actions">
+        <button class="btn btn-ghost btn-sm admin-only hidden" id="add-member-btn">Add member</button>
+        <button class="btn btn-primary btn-sm admin-only hidden" id="add-task-btn">New task</button>
+      </div>
+    </div>
+    <div class="members-strip" id="members-strip">
+      <div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0"></div>
+    </div>
+    <div class="llm-panel admin-only hidden" id="project-llm-panel">
+      <div class="llm-panel-header">
+        <span class="llm-panel-title"><span id="project-llm-icon"></span> LLM initiative planner</span>
+        <button type="button" class="btn btn-ghost btn-sm" id="project-llm-suggest-btn">Suggest task backlog</button>
+      </div>
+      <p>Project Lead only — generates task ideas from the initiative scope.</p>
+      <ul class="llm-task-list hidden" id="project-llm-tasks"></ul>
+    </div>
+    <div class="kanban-board">
+      <div class="kanban-col col-todo">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title"><span class="col-dot"></span> To do</div>
+          <span class="col-count" id="count-TODO">0</span>
+        </div>
+        <div class="kanban-cards" id="col-TODO"><div class="loading-page"><div class="spinner"></div></div></div>
+      </div>
+      <div class="kanban-col col-progress">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title"><span class="col-dot"></span> In progress</div>
+          <span class="col-count" id="count-IN_PROGRESS">0</span>
+        </div>
+        <div class="kanban-cards" id="col-IN_PROGRESS"><div class="loading-page"><div class="spinner"></div></div></div>
+      </div>
+      <div class="kanban-col col-done">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title"><span class="col-dot"></span> Done</div>
+          <span class="col-count" id="count-DONE">0</span>
+        </div>
+        <div class="kanban-cards" id="col-DONE"><div class="loading-page"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="modal-overlay" id="add-task-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New task</h2>
+      <button type="button" class="modal-close" id="close-task-modal" aria-label="Close"></button>
+    </div>
+    <form id="add-task-form">
+      <div class="llm-panel">
+        <div class="llm-panel-header">
+          <span class="llm-panel-title"><span id="task-llm-icon"></span> LLM task assist</span>
+          <button type="button" class="btn btn-ghost btn-sm" id="ai-task-insight-btn">Get execution insight</button>
+        </div>
+        <div class="llm-output hidden" id="task-llm-insight"></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="ai-suggest-tasks-btn" style="margin-top:8px">Suggest tasks for project (LLM)</button>
+        <ul class="llm-task-list hidden" id="ai-suggested-tasks"></ul>
+      </div>
+
+      <div class="form-group">
+        <label for="task_title">Title</label>
+        <input id="task_title" name="task_title" type="text" placeholder="Deliverable or action item" required/>
+      </div>
+      <div class="form-group">
+        <label for="task_desc">Description</label>
+        <textarea id="task_desc" name="task_desc" placeholder="Context and acceptance criteria"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group">
+          <label for="task_status">Status</label>
+          <select id="task_status" name="task_status">
+            <option value="TODO">To do</option>
+            <option value="IN_PROGRESS">In progress</option>
+            <option value="DONE">Done</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="task_priority">Priority</label>
+          <select id="task_priority" name="task_priority">
+            <option value="LOW">Low</option>
+            <option value="MEDIUM" selected>Medium</option>
+            <option value="HIGH">High</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group">
+          <label for="task_assignee">Assignee</label>
+          <select id="task_assignee" name="task_assignee"><option value="">Unassigned</option></select>
+        </div>
+        <div class="form-group">
+          <label for="task_due">Due date</label>
+          <input id="task_due" name="task_due" type="date"/>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-task">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create task</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="add-member-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add member</h2>
+      <button type="button" class="modal-close" id="close-member-modal" aria-label="Close"></button>
+    </div>
+    <form id="add-member-form">
+      <div class="form-group">
+        <label for="member_email">Email</label>
+        <input id="member_email" name="member_email" type="email" placeholder="colleague@company.com" required/>
+        <small>User must already be registered on TaskFlow.</small>
+      </div>
+      <div class="form-group">
+        <label for="member_role">Role</label>
+        <select id="member_role" name="member_role">
+          <option value="MEMBER">Tasker — works on assigned tasks</option>
+          <option value="ADMIN">Project Lead — full project control</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-member">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add member</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="task-detail-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="task-detail-title">Task</h2>
+      <button type="button" class="modal-close" id="close-task-detail" aria-label="Close"></button>
+    </div>
+    <div id="task-detail-body"></div>
+    <div class="modal-actions" style="margin-top:0;border-top:none;padding-top:0">
+      <button type="button" class="btn btn-ghost" id="close-detail-btn">Close</button>
+      <button type="button" class="btn btn-primary" id="save-status-btn">Save status</button>
+    </div>
+  </div>
+</div>
+<script src="/js/icons.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/project.js"></script>
+</body>
+</html>

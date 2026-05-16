@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Work Hub — TaskFlow</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <script src="/js/theme-init.js"></script>
+</head>
+<body class="dashboard-glass">
+<div class="bg-glow dashboard-bg"></div>
+<div class="bg-orb bg-orb-tl" aria-hidden="true"></div>
+<div class="bg-orb bg-orb-br" aria-hidden="true"></div>
+<div class="bg-sparkle" aria-hidden="true">✦</div>
+<div class="app-layout">
+  <aside class="sidebar glass-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark" id="sidebar-logo"></div>
+      <div class="logo-text">Task<span>Flow</span></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar" id="user-avatar">?</div>
+      <div class="user-info">
+        <div class="name" id="user-name">Loading</div>
+        <div class="email" id="user-email"></div>
+        <div class="sidebar-role" id="user-role-summary"></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Menu</div>
+      <a href="/dashboard" class="nav-item active">
+        <span class="nav-icon" id="nav-icon-dashboard"></span> Work Hub
+      </a>
+      <div class="nav-section-title" style="margin-top:8px">Session</div>
+      <div class="nav-item" id="logout-btn">
+        <span class="nav-icon" id="nav-icon-logout"></span> Sign out
+      </div>
+    </nav>
+
+    <div class="sidebar-tools">
+      <div class="nav-section-title">Preferences</div>
+      <button type="button" class="nav-item" id="refresh-btn" title="Reload page data">
+        <span class="nav-icon" id="nav-icon-refresh"></span> Refresh
+      </button>
+      <button type="button" class="nav-item" data-theme-toggle>
+        <span class="nav-icon"></span> <span class="theme-label">Theme</span>
+      </button>
+    </div>
+    <div class="sidebar-bottom">TaskFlow v1.0</div>
+  </aside>
+  <main class="main-content">
+    <div class="page-header glass-panel">
+      <div>
+        <h1>Command Center</h1>
+        <p>Your mission overview — deliverables, initiatives, and live task analytics.</p>
+      </div>
+      <button class="btn btn-primary btn-glow" id="create-project-btn">
+        <span id="btn-icon-plus"></span> New project
+      </button>
+    </div>
+
+    <div class="role-legend">
+      <div class="role-legend-card glass-panel">
+        <h3><span class="badge badge-lead">Project Lead</span></h3>
+        <p>Creates projects, adds members, assigns tasks, and manages the board.</p>
+      </div>
+      <div class="role-legend-card glass-panel">
+        <h3><span class="badge badge-tasker">Tasker</span></h3>
+        <p>Views boards and updates status on tasks assigned to you.</p>
+      </div>
+    </div>
+
+    <div class="dashboard-overview">
+      <div class="stats-grid stats-grid-clickable">
+        <button type="button" class="stat-card glass-panel primary stat-card-btn active" data-filter="all" aria-pressed="true">
+          <div class="stat-icon-wrap" id="stat-icon-total"></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Assigned tasks</div>
+          </div>
+        </button>
+        <button type="button" class="stat-card glass-panel stat-card-btn stat-pending" data-filter="TODO" aria-pressed="false">
+          <div class="stat-icon-wrap" id="stat-icon-pending"></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-pending">0</div>
+            <div class="stat-label">Pending</div>
+          </div>
+        </button>
+        <button type="button" class="stat-card glass-panel warning stat-card-btn" data-filter="IN_PROGRESS" aria-pressed="false">
+          <div class="stat-icon-wrap" id="stat-icon-progress"></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-progress">0</div>
+            <div class="stat-label">In progress</div>
+          </div>
+        </button>
+        <button type="button" class="stat-card glass-panel success stat-card-btn" data-filter="DONE" aria-pressed="false">
+          <div class="stat-icon-wrap" id="stat-icon-done"></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-done">0</div>
+            <div class="stat-label">Completed</div>
+          </div>
+        </button>
+        <button type="button" class="stat-card glass-panel danger stat-card-btn" data-filter="overdue" aria-pressed="false">
+          <div class="stat-icon-wrap" id="stat-icon-overdue"></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-overdue">0</div>
+            <div class="stat-label">Overdue</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="glass-panel chart-panel">
+        <div class="card-header">
+          <h2 id="chart-title">Task distribution</h2>
+          <span class="badge-count" id="chart-total-badge">0 tasks</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="task-pie-chart" width="220" height="220" aria-label="Task status pie chart"></canvas>
+          <div class="chart-center">
+            <span class="chart-center-value" id="chart-center-value">0</span>
+            <span class="chart-center-label" id="chart-center-label">Total</span>
+          </div>
+        </div>
+        <div class="chart-legend" id="chart-legend"></div>
+      </div>
+    </div>
+
+    <div class="glass-panel filter-tasks-panel" id="filter-tasks-panel">
+      <div class="card-header">
+        <h2 id="filter-panel-title">All assigned tasks</h2>
+        <span class="badge-count" id="filter-panel-count">0</span>
+      </div>
+      <div id="filter-panel-list" class="filter-panel-list">
+        <p class="filter-panel-hint">Click a stat card above to view tasks in that category.</p>
+      </div>
+    </div>
+
+    <div class="llm-panel glass-panel" id="hub-llm-panel">
+      <div class="llm-panel-header">
+        <span class="llm-panel-title"><span id="hub-llm-icon"></span> LLM workspace insights</span>
+        <button type="button" class="btn btn-ghost btn-sm" id="hub-llm-refresh">Analyze workload</button>
+      </div>
+      <p>Summarizes your assignments and suggests focus areas (uses OpenAI when configured, otherwise built-in assistant).</p>
+      <div class="llm-output hidden" id="hub-llm-output"></div>
+    </div>
+
+    <div class="section-grid">
+      <div class="card glass-panel">
+        <div class="card-header">
+          <h2>Your deliverables</h2>
+          <span class="badge-count" id="my-tasks-badge">0</span>
+        </div>
+        <div id="my-tasks-list"><div class="loading-page"><div class="spinner"></div></div></div>
+      </div>
+      <div class="card glass-panel">
+        <div class="card-header">
+          <h2>Active initiatives</h2>
+          <span class="badge-count" id="projects-badge">0</span>
+        </div>
+        <div id="projects-grid" style="display:grid;gap:10px">
+          <div class="loading-page"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="modal-overlay" id="create-project-modal">
+  <div class="modal glass-panel">
+    <div class="modal-header">
+      <h2>New project</h2>
+      <button type="button" class="modal-close" id="close-modal" aria-label="Close"></button>
+    </div>
+    <form id="create-project-form">
+      <div class="llm-panel">
+        <div class="llm-panel-header">
+          <span class="llm-panel-title"><span id="proj-llm-icon"></span> LLM project brief</span>
+          <button type="button" class="btn btn-ghost btn-sm" id="ai-project-desc-btn">Generate description</button>
+        </div>
+        <p>Optional context for the model:</p>
+        <input id="proj_ai_context" type="text" placeholder="e.g. 6-week rollout, 3 engineers" style="width:100%;padding:10px 14px;margin-top:6px;background:var(--bg-inset);border:1px solid var(--border);border-radius:6px;color:var(--text-primary)"/>
+        <div class="llm-output hidden" id="proj-llm-status"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="proj_name">Project name</label>
+        <input id="proj_name" name="proj_name" type="text" placeholder="Q2 Product Launch" required/>
+      </div>
+      <div class="form-group">
+        <label for="proj_desc">Description</label>
+        <textarea id="proj_desc" name="proj_desc" placeholder="Brief scope and objectives"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-create">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-glow">Create project</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="/js/icons.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/task-chart.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>
